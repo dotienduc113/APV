@@ -202,7 +202,7 @@ if __name__ == '__main__':
     count = 0
     print("\n")
     secured_object_type = "user"
-    current_time = datetime.datetime.now().strftime('%d%m%Y_%H%M%S')
+    #current_time = datetime.datetime.now().strftime('%d%m%Y_%H%M%S')
     for name, sid in sids.items():
         count = count + 1
         principal_sid = sid
@@ -223,8 +223,33 @@ if __name__ == '__main__':
         dic = extract_ace_data(name.upper(), data, sid, "AllExtendedRights")
         execute(dic, "AllExtendedRights")
 
+
     export_csv_table()
 
+    sids = get_sid(str(wmic_query_sep(1)))
+    data = read_json("_groups.json")
+    count = 0
+    print("\n")
+    secured_object_type = "group"
+
+    for name, sid in sids.items():
+        count = count + 1
+        principal_sid = sid
+        print(str(count) + "." + name)
+
+        dic = extract_ace_data(name.upper(), data, sid, "GenericAll")
+        execute(dic, "GenericAll")
+
+        dic = extract_ace_data(name.upper(), data, sid, "GenericWrite")
+        execute(dic, "GenericWrite")
+
+        dic = extract_ace_data(name.upper(), data, sid, "WriteDACL")
+        execute(dic, "WriteDACL")
+
+        dic = extract_ace_data(name.upper(), data, sid, "AllExtendedRights")
+        execute(dic, "AllExtendedRights")
+
+    export_csv_table()
     '''
     #run_bloodhound(args.domain, args.username, args.password)
     sids = get_sid(str(wmic_query(1)))
